@@ -19,7 +19,6 @@ const movieGrid = document.getElementById("movieGrid");
 const pagination = document.getElementById("pagination");
 const modalOverlay = document.getElementById("modalOverlay");
 const modalBody = document.getElementById("modalBody");
-const modalClose = document.getElementById("modalClose");
 
 // 初始化地区标签
 function initTabs() {
@@ -127,9 +126,6 @@ function showModal(movie) {
 }
 
 // 关闭弹窗
-modalClose.addEventListener("click", () =>
-  modalOverlay.classList.remove("show"),
-);
 modalOverlay.addEventListener("click", (e) => {
   if (e.target === modalOverlay) modalOverlay.classList.remove("show");
 });
