@@ -4,60 +4,489 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>artmuser</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>电影分享</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f6f7fb;
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .btn {
+            border: none;
+            background: #111827;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #374151;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .card-body {
+            padding: 14px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .card-meta {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .card-meta span {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .card-time {
+            font-size: 13px;
+            color: #2563eb;
+            margin-top: 4px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .card-actions button {
+            flex: 1;
+            padding: 6px 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination span {
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 460px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #374151;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #2563eb;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9ca3af;
+            font-size: 15px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .card img {
+                height: 240px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <header class="topbar">
-        <div class="brand">MagnetShare</div>
-        <nav class="nav">
-            <a href="index.html" class="active">首页</a>
-            <a href="detail.html">详情</a>
-        </nav>
-    </header>
 
-    <main class="container">
-        <section class="hero">
-            <h1>快速分享磁力链接</h1>
-            <p class="sub">粘贴磁力链接，生成简洁分享卡片，方便复制和查看。</p>
-        </section>
+    <div class="container">
+        <header>
+            <h1>🎬 电影分享</h1>
+            <button class="btn" onclick="openModal()">+ 添加电影</button>
+        </header>
 
-        <section class="card share-card">
-            <label for="magnetInput">磁力链接</label>
-            <textarea id="magnetInput" placeholder="magnet:?xt=urn:btih:..." rows="3"></textarea>
+        <div id="movieGrid" class="grid"></div>
+        <div id="emptyState" class="empty" style="display:none;">暂无电影，点击右上角添加吧</div>
 
-            <div class="row">
-                <input type="text" id="titleInput" placeholder="标题（可选）" />
-            </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
 
-            <div class="actions">
-                <button id="previewBtn" class="btn secondary">预览</button>
-                <button id="shareBtn" class="btn primary">复制分享</button>
-            </div>
+    <!-- 添加/编辑弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h2 id="modalTitle">添加电影</h2>
+            <form id="movieForm" onsubmit="saveMovie(event)">
+                <input type="hidden" id="editId" />
 
-            <p id="shareTip" class="tip"></p>
-        </section>
+                <div class="form-group">
+                    <label>电影名称 *</label>
+                    <input type="text" id="name" required placeholder="例如：肖申克的救赎" />
+                </div>
 
-        <section class="card">
-            <div class="section-header">
-                <h2>最近分享</h2>
-                <span class="count" id="recentCount">0</span>
-            </div>
+                <div class="form-group">
+                    <label>年代</label>
+                    <input type="text" id="year" placeholder="例如：1994" />
+                </div>
 
-            <ul id="recentList" class="recent-list"></ul>
+                <div class="form-group">
+                    <label>地区</label>
+                    <input type="text" id="region" placeholder="例如：美国" />
+                </div>
 
-            <div id="emptyState" class="empty">
-                还没有分享内容，先粘贴一个磁力链接试试。
-            </div>
-        </section>
-    </main>
+                <div class="form-group">
+                    <label>精彩时间点</label>
+                    <input type="text" id="highlight" placeholder="例如：01:23:45 经典台词片段" />
+                </div>
 
-    <footer class="footer">
-        <p>仅供学习交流，请勿分享或传播违法内容。</p>
-    </footer>
+                <div class="form-group">
+                    <label>封面图片链接</label>
+                    <input type="url" id="cover" placeholder="https://..." />
+                </div>
 
-    <script src="js/app.js"></script>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">取消</button>
+                    <button type="submit" class="btn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'movie_share_data';
+        const PAGE_SIZE = 6;
+        let currentPage = 1;
+
+        // 默认示例数据
+        const defaultMovies = [
+            {
+                id: 1,
+                name: '肖申克的救赎',
+                year: '1994',
+                region: '美国',
+                highlight: '01:45:00 雨中自由片段',
+                cover: 'https://img3.doubanio.com/view/photo/l/public/p2345567890.jpg'
+            },
+            {
+                id: 2,
+                name: '千与千寻',
+                year: '2001',
+                region: '日本',
+                highlight: '00:32:10 海上列车',
+                cover: 'https://img1.doubanio.com/view/photo/l/public/p2567890123.jpg'
+            },
+            {
+                id: 3,
+                name: '霸王别姬',
+                year: '1993',
+                region: '中国',
+                highlight: '01:58:30 最后一幕',
+                cover: 'https://img2.doubanio.com/view/photo/l/public/p2561234567.jpg'
+            }
+        ];
+
+        function loadMovies() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (!data) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMovies));
+                return defaultMovies;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveMovies(movies) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
+        }
+
+        function render() {
+            const movies = loadMovies();
+            const grid = document.getElementById('movieGrid');
+            const empty = document.getElementById('emptyState');
+            const pagination = document.getElementById('pagination');
+
+            if (movies.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                pagination.innerHTML = '';
+                return;
+            }
+
+            empty.style.display = 'none';
+
+            const totalPages = Math.ceil(movies.length / PAGE_SIZE);
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const pageMovies = movies.slice(start, start + PAGE_SIZE);
+
+            grid.innerHTML = pageMovies.map(m => `
+      <div class="card">
+        <img src="${escapeHtml(m.cover)}" alt="${escapeHtml(m.name)}" 
+             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22><rect fill=%22%23e5e7eb%22 width=%22300%22 height=%22400%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2216%22>暂无封面</text></svg>'" />
+        <div class="card-body">
+          <div class="card-title">${escapeHtml(m.name)}</div>
+          <div class="card-meta">
+            ${m.year ? `<span>📅 ${escapeHtml(m.year)}</span>` : ''}
+            ${m.region ? `<span>📍 ${escapeHtml(m.region)}</span>` : ''}
+          </div>
+          ${m.highlight ? `<div class="card-time">⏱ ${escapeHtml(m.highlight)}</div>` : ''}
+          <div class="card-actions">
+            <button class="btn btn-secondary" onclick="editMovie(${m.id})">编辑</button>
+            <button class="btn btn-danger" onclick="deleteMovie(${m.id})">删除</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+            // 分页
+            pagination.innerHTML = `
+      <button onclick="goPage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>上一页</button>
+      <span>第 ${currentPage} / ${totalPages} 页（共 ${movies.length} 部）</span>
+      <button onclick="goPage(${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>下一页</button>
+    `;
+        }
+
+        function goPage(page) {
+            currentPage = page;
+            render();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function openModal(movie = null) {
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalTitle').textContent = movie ? '编辑电影' : '添加电影';
+            document.getElementById('editId').value = movie ? movie.id : '';
+            document.getElementById('name').value = movie ? movie.name : '';
+            document.getElementById('year').value = movie ? movie.year : '';
+            document.getElementById('region').value = movie ? movie.region : '';
+            document.getElementById('highlight').value = movie ? movie.highlight : '';
+            document.getElementById('cover').value = movie ? movie.cover : '';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('movieForm').reset();
+            document.getElementById('editId').value = '';
+        }
+
+        function saveMovie(e) {
+            e.preventDefault();
+            const movies = loadMovies();
+            const editId = document.getElementById('editId').value;
+
+            const movieData = {
+                name: document.getElementById('name').value.trim(),
+                year: document.getElementById('year').value.trim(),
+                region: document.getElementById('region').value.trim(),
+                highlight: document.getElementById('highlight').value.trim(),
+                cover: document.getElementById('cover').value.trim()
+            };
+
+            if (editId) {
+                const idx = movies.findIndex(m => m.id == editId);
+                if (idx !== -1) movies[idx] = {...movies[idx], ...movieData};
+            } else {
+                movieData.id = Date.now();
+                movies.unshift(movieData);
+            }
+
+            saveMovies(movies);
+            closeModal();
+            render();
+        }
+
+        function editMovie(id) {
+            const movies = loadMovies();
+            const movie = movies.find(m => m.id === id);
+            if (movie) openModal(movie);
+        }
+
+        function deleteMovie(id) {
+            if (!confirm('确定删除这部电影吗？')) return;
+            const movies = loadMovies().filter(m => m.id !== id);
+            saveMovies(movies);
+            render();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // 点击遮罩关闭
+        document.getElementById('modalOverlay').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+
+        // 初始化
+        render();
+    </script>
+
 </body>
 
 </html>
