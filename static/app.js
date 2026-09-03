@@ -1,9 +1,10 @@
 // 配置
 const REGIONS = [
-  { code: "jp", label: "日本" },
-  { code: "kr", label: "韩国" },
-  { code: "us", label: "美国" },
-  { code: "cn", label: "中国" },
+  { code: "dl", label: "大陆" },
+  { code: "gt", label: "港台" },
+  { code: "rh", label: "日韩" },
+  { code: "om", label: "欧美" },
+  { code: "qt", label: "其他" },
 ];
 const PER_PAGE = 12;
 
