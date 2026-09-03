@@ -1,14 +1,332 @@
 <!DOCTYPE html>
-<html lang="zh">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>artmuser</title>
+    <title>光影笔记 · 电影分享</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --accent: #e85d04;
+            --border: #eeeeee;
+            --shadow: 0 2px 12px rgba(0,0,0,0.06);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* 英雄区 */
+        .hero {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 80px 24px 48px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* 分类标签 */
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 0 24px 40px;
+        }
+
+        .tag {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag:hover, .tag.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        /* 电影网格 */
+        .grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            background: #e0e0e0;
+        }
+
+        .card-body {
+            padding: 16px 20px 20px;
+        }
+
+        .card-body h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .rating {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .card-body p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 32px 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero {
+                padding: 48px 20px 32px;
+            }
+
+            .nav-links {
+                gap: 16px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                padding: 0 16px 60px;
+            }
+
+            .card-img {
+                height: 200px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-this is my first website !!!
-</body>
 
+    <nav>
+        <div class="logo">光影<span>笔记</span></div>
+        <ul class="nav-links">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">片单</a></li>
+            <li><a href="#">关于</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h1>记录每一帧心动</h1>
+        <p>在这里分享看过的好电影，写下属于你的观影感受</p>
+    </section>
+
+    <div class="tags">
+        <span class="tag active">全部</span>
+        <span class="tag">剧情</span>
+        <span class="tag">科幻</span>
+        <span class="tag">动画</span>
+        <span class="tag">悬疑</span>
+        <span class="tag">喜剧</span>
+    </div>
+
+    <section class="grid">
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>星际穿越</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 9.4</span>
+                    <span>2014</span>
+                    <span>· 科幻</span>
+                </div>
+                <p>一部关于爱、时间与宇宙的电影。诺兰用影像告诉我们，爱是唯一可以穿越时空的力量。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>千与千寻</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 9.4</span>
+                    <span>2001</span>
+                    <span>· 动画</span>
+                </div>
+                <p>宫崎骏的巅峰之作，少女千寻在神隐世界中成长的故事，每一帧都是手绘的温度。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>肖申克的救赎</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 9.7</span>
+                    <span>1994</span>
+                    <span>· 剧情</span>
+                </div>
+                <p>希望是美好的，也许是人间至善，而美好的事物永不消逝。一部值得反复观看的经典。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>花样年华</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 8.8</span>
+                    <span>2000</span>
+                    <span>· 剧情</span>
+                </div>
+                <p>王家卫用极致的镜头语言，讲述了一段欲言又止的爱情。张曼玉的旗袍美得令人窒息。</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>盗梦空间</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 9.3</span>
+                    <span>2010</span>
+                    <span>· 科幻</span>
+                </div>
+                <p>梦境中的梦境，层层嵌套的叙事结构让人欲罢不能。结尾的陀螺到底停了吗？</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img" src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=600&h=360&fit=crop" alt="电影封面">
+            <div class="card-body">
+                <h3>布达佩斯大饭店</h3>
+                <div class="card-meta">
+                    <span class="rating">★ 8.9</span>
+                    <span>2014</span>
+                    <span>· 喜剧</span>
+                </div>
+                <p>韦斯·安德森的对称美学巅峰，每一帧都像一幅精心构图的油画，荒诞又温柔。</p>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 光影笔记 · 用电影记录生活</p>
+    </footer>
+
+</body>
 </html>
